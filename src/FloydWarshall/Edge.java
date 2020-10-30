@@ -1,16 +1,19 @@
-public class DirectedEdge {
+package FloydWarshall;
+
+public class Edge {
     private Node initialNode, finalNode;
     private int value;
 
-    public DirectedEdge(Node initialNode, Node finalNode, int value) {
+    public Edge(Node initialNode, Node finalNode, int value) {
         this.initialNode = initialNode;
         this.finalNode = finalNode;
         this.value = value;
     }
 
-    public DirectedEdge(Node initialNode, Node finalNode) {
+    public Edge(Node initialNode, Node finalNode) {
         this.initialNode = initialNode;
         this.finalNode = finalNode;
+        this.value = 0;
     }
 
     public Node getInitialNode() {
@@ -35,5 +38,10 @@ public class DirectedEdge {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return initialNode.toString() + " " + finalNode.toString() + " " + value;
     }
 }

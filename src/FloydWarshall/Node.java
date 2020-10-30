@@ -1,3 +1,5 @@
+package FloydWarshall;
+
 public class Node {
     private int id;
 
@@ -11,5 +13,10 @@ public class Node {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "" + id;
     }
 }
