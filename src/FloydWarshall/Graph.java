@@ -3,18 +3,10 @@ package FloydWarshall;
 import java.io.*;
 import java.util.*;
 
-/**
- * The type Graph.
- */
 public class Graph {
     private int nodesNumber, EdgesNumber;
     private final List<Edge> EdgeList;
 
-    /**
-     * Instantiates a new Graph.
-     *
-     * @param path the path
-     */
     public Graph(String path) {
         EdgeList = new ArrayList<>();
         try {
@@ -51,29 +43,14 @@ public class Graph {
         }
     }
 
-    /**
-     * Gets nodes number.
-     *
-     * @return the nodes number
-     */
     public int getNodesNumber() {
         return nodesNumber;
     }
 
-    /**
-     * Gets edges number.
-     *
-     * @return the edges number
-     */
     public int getEdgesNumber() {
         return EdgesNumber;
     }
 
-    /**
-     * Gets edge list.
-     *
-     * @return the edge list
-     */
     public List<Edge> getEdgeList() {
         return EdgeList;
     }
@@ -88,12 +65,7 @@ public class Graph {
         return sb.toString();
     }
 
-    /**
-     * Get adjency matrix double [ ] [ ].
-     *
-     * @return the double [ ] [ ]
-     */
-    public double[][] getAdjencyMatrix() {
+    public double[][] getWeightAdjencyMatrix() {
         double[][] matrix = new double[this.nodesNumber][this.nodesNumber];
         for (int i = 0; i < this.nodesNumber; i++) {
             for (int j = 0; j < this.nodesNumber; j++) {
@@ -111,12 +83,19 @@ public class Graph {
         return matrix;
     }
 
-    /**
-     * Gets matrix string.
-     *
-     * @param matrix the matrix
-     * @return the matrix string
-     */
+    public double[][] getNextAdjencyMatrix() {
+        double[][] matrix = new double[this.nodesNumber][this.nodesNumber];
+        for (int i = 0; i < this.nodesNumber; i++) {
+            for (int j = 0; j < this.nodesNumber; j++) {
+                matrix[i][j] = 0;
+            }
+        }
+        for (Edge de : this.EdgeList) {
+            matrix[de.getInitialNode().getId()][de.getFinalNode().getId()] = 1;
+        }
+        return matrix;
+    }
+
     public String getMatrixString(double[][] matrix) {
         StringBuilder sb = new StringBuilder();
         sb.append("\t");
@@ -139,22 +118,22 @@ public class Graph {
         return sb.toString();
     }
 
-    /**
-     * Floyd warshall double [ ] [ ].
-     *
-     * @return the double [ ] [ ]
-     */
-    public double[][] floydWarshall() {
-        double[][] matrix = this.getAdjencyMatrix();
+    public List<double[][]> floydWarshall() {
+        double[][] weightAdjencyMatrix = this.getWeightAdjencyMatrix();
+        double[][] nextAdjencyMatrix = this.getNextAdjencyMatrix();
         for (int k = 0; k < this.nodesNumber; k++) {
             for (int i = 0; i < this.nodesNumber; i++) {
                 for (int j = 0; j < this.nodesNumber; j++) {
-                    if (matrix[i][k] + matrix[k][j] < matrix[i][j]) {
-                        matrix[i][j] = matrix[i][k] + matrix[k][j];
+                    if (weightAdjencyMatrix[i][k] + weightAdjencyMatrix[k][j] < weightAdjencyMatrix[i][j]) {
+                        weightAdjencyMatrix[i][j] = weightAdjencyMatrix[i][k] + weightAdjencyMatrix[k][j];
+                        nextAdjencyMatrix[i][j] = nextAdjencyMatrix[i][k];
                     }
                 }
             }
         }
-        return matrix;
+        List<double[][]> matrixList = new ArrayList<>();
+        matrixList.add(weightAdjencyMatrix);
+        matrixList.add(nextAdjencyMatrix);
+        return matrixList;
     }
 }
