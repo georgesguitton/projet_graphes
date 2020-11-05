@@ -65,29 +65,29 @@ public class Graph {
         return sb.toString();
     }
 
-    public double[][] getWeightAdjencyMatrix() {
-        double[][] matrix = new double[this.nodesNumber][this.nodesNumber];
+    public int[][] getWeightAdjencyMatrix() {
+        int[][] matrix = new int[this.nodesNumber][this.nodesNumber];
         for (int i = 0; i < this.nodesNumber; i++) {
             for (int j = 0; j < this.nodesNumber; j++) {
-                matrix[i][j] = Double.POSITIVE_INFINITY;
+                matrix[i][j] = 9999;
             }
         }
         for (Edge e : this.EdgeList) {
             matrix[e.getInitialNode().getId()][e.getFinalNode().getId()] = e.getValue();
         }
         for (int n = 0; n < nodesNumber; n++) {
-            if (matrix[n][n] == Double.POSITIVE_INFINITY) {
+            if (matrix[n][n] == 9999) {
                 matrix[n][n] = 0;
             }
         }
         return matrix;
     }
 
-    public double[][] getNextAdjencyMatrix() {
-        double[][] matrix = new double[this.nodesNumber][this.nodesNumber];
+    public int[][] getNextAdjencyMatrix() {
+        int[][] matrix = new int[this.nodesNumber][this.nodesNumber];
         for (int i = 0; i < this.nodesNumber; i++) {
             for (int j = 0; j < this.nodesNumber; j++) {
-                matrix[i][j] = 0;
+                matrix[i][j] = -1;
             }
         }
         for (Edge e : this.EdgeList) {
@@ -96,21 +96,21 @@ public class Graph {
         return matrix;
     }
 
-    public String getMatrixString(double[][] matrix) {
+    public String getMatrixString(int[][] matrix) {
         StringBuilder sb = new StringBuilder();
         sb.append("\t");
         for (int n = 0; n < this.nodesNumber; n++) {
-            sb.append(n).append("\t\t");
+            sb.append(n).append(" \t");
         }
         sb.append("\n");
         for (int j = 0; j < this.nodesNumber; j++) {
             sb.append(j).append("\t");
             for (int i = 0; i < this.nodesNumber; i++) {
-                double value = matrix[j][i];
-                if (value == Double.POSITIVE_INFINITY) {
-                    sb.append("Inf").append(" \t");
+                int value = matrix[j][i];
+                if (value > 9000) {
+                    sb.append("Inf").append("\t");
                 } else {
-                    sb.append(value).append(" \t");
+                    sb.append(value).append("\t");
                 }
             }
             sb.append("\n");
@@ -118,9 +118,9 @@ public class Graph {
         return sb.toString();
     }
 
-    public List<double[][]> floydWarshall() {
-        double[][] weightAdjencyMatrix = this.getWeightAdjencyMatrix();
-        double[][] nextAdjencyMatrix = this.getNextAdjencyMatrix();
+    public List<int[][]> floydWarshall() {
+        int[][] weightAdjencyMatrix = this.getWeightAdjencyMatrix();
+        int[][] nextAdjencyMatrix = this.getNextAdjencyMatrix();
         for (int k = 0; k < this.nodesNumber; k++) {
             for (int i = 0; i < this.nodesNumber; i++) {
                 for (int j = 0; j < this.nodesNumber; j++) {
@@ -131,33 +131,51 @@ public class Graph {
                 }
             }
         }
-        List<double[][]> matrixList = new ArrayList<>();
+        List<int[][]> matrixList = new ArrayList<>();
         matrixList.add(weightAdjencyMatrix);
         matrixList.add(nextAdjencyMatrix);
         return matrixList;
     }
 
-    public String getAllPaths(double[][] nextAdjencyMatrix) {
+    public String getAllPaths(int[][] nextAdjencyMatrix) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nextAdjencyMatrix.length; i++) {
-            //System.out.println(i);
             for (int j = 0; j < nextAdjencyMatrix.length; j++) {
-                //System.out.println(j);
+                StringBuilder temp = new StringBuilder();
                 if (i != j) {
-                    int u = i + 1;
-                    int v = j + 1;
-                    //System.out.println(u + " " + v);
-                    sb.append(u);
-                    do {
-                        if (nextAdjencyMatrix[u - 1][v - 1] == Double.POSITIVE_INFINITY) {
-                            u = (int) (nextAdjencyMatrix[u - 1][v - 1]);
-                            sb.append(" -> ").append(u);
-                        } else {
-                            break;
+                    int value = nextAdjencyMatrix[i][j];
+                    if (value == i) {
+                        temp.append(i).append(" -> ").append(j).append("\n");
+                    } else if (value != -1) {
+                        temp.append(i).append(" -> ").append(value).append(" -> ");
+                        while (value != nextAdjencyMatrix[value][j]) {
+                            value = nextAdjencyMatrix[value][j];
+                            temp.append(value).append(" -> ");
                         }
-                    } while (u != v);
-                    sb.append("\n");
+                        temp.append(j).append("\n");
+                    }
                 }
+                sb.append(temp.toString());
+            }
+        }
+        return sb.toString();
+    }
+
+    public String getPath(int initialNodeId, int finalNodeId, int[][] nextAdjencyMatrix) {
+        StringBuilder sb = new StringBuilder();
+        if (initialNodeId != finalNodeId) {
+            int value = nextAdjencyMatrix[initialNodeId][finalNodeId];
+            if (value == initialNodeId) {
+                sb.append(initialNodeId).append(" -> ").append(finalNodeId);
+            } else if (value != -1) {
+                sb.append(initialNodeId).append(" -> ").append(value).append(" -> ");
+                while (value != nextAdjencyMatrix[value][finalNodeId]) {
+                    value = nextAdjencyMatrix[value][finalNodeId];
+                    sb.append(value).append(" -> ");
+                }
+                sb.append(finalNodeId);
+            } else {
+                sb.append("Il n'existe pas de chemin reliant ").append(initialNodeId).append(" à ").append(finalNodeId);
             }
         }
         return sb.toString();
