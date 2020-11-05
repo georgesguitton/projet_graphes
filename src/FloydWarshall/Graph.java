@@ -3,17 +3,24 @@ package FloydWarshall;
 import java.io.*;
 import java.util.*;
 
+/**
+ * The type Graph.
+ */
 public class Graph {
     private int nodesNumber, EdgesNumber;
     private final List<Edge> EdgeList;
 
+    /**
+     * Instantiates a new Graph.
+     *
+     * @param path the path
+     */
     public Graph(String path) {
         EdgeList = new ArrayList<>();
         try {
-            BufferedReader in = null;
             File file = new File(path);
-            in = new BufferedReader(new FileReader(file));
-            String line = "";
+            BufferedReader in = new BufferedReader(new FileReader(file));
+            String line;
 
             Map<Integer, Node> nodeMap = new HashMap<>();
 
@@ -44,14 +51,29 @@ public class Graph {
         }
     }
 
+    /**
+     * Gets nodes number.
+     *
+     * @return the nodes number
+     */
     public int getNodesNumber() {
         return nodesNumber;
     }
 
+    /**
+     * Gets edges number.
+     *
+     * @return the edges number
+     */
     public int getEdgesNumber() {
         return EdgesNumber;
     }
 
+    /**
+     * Gets edge list.
+     *
+     * @return the edge list
+     */
     public List<Edge> getEdgeList() {
         return EdgeList;
     }
@@ -66,6 +88,11 @@ public class Graph {
         return sb.toString();
     }
 
+    /**
+     * Get adjency matrix double [ ] [ ].
+     *
+     * @return the double [ ] [ ]
+     */
     public double[][] getAdjencyMatrix() {
         double[][] matrix = new double[this.nodesNumber][this.nodesNumber];
         for (int i = 0; i < this.nodesNumber; i++) {
@@ -84,6 +111,12 @@ public class Graph {
         return matrix;
     }
 
+    /**
+     * Gets matrix string.
+     *
+     * @param matrix the matrix
+     * @return the matrix string
+     */
     public String getMatrixString(double[][] matrix) {
         StringBuilder sb = new StringBuilder();
         sb.append("\t");
@@ -106,6 +139,11 @@ public class Graph {
         return sb.toString();
     }
 
+    /**
+     * Floyd warshall double [ ] [ ].
+     *
+     * @return the double [ ] [ ]
+     */
     public double[][] floydWarshall() {
         double[][] matrix = this.getAdjencyMatrix();
         for (int k = 0; k < this.nodesNumber; k++) {
