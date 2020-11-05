@@ -34,13 +34,15 @@ public class Test {
             System.out.println(g.getMatrixString(weightAdjencyMatrix));
             System.out.println(g.getMatrixString(nextAdjencyMatrix));
             System.out.println(g.getMatrixString(floydWarshall.get(0)));
+            System.out.println(g.getMatrixString(floydWarshall.get(1)));
             String pathInput = null;
             do {
                 System.out.println("Voulez-vous afficher tous les chemins, un chemin particulier ou arrêter ? (Saisir '1', '2' ou 'stop')");
                 try {
                     pathInput = stdin.readLine();
+                    System.out.println(pathInput);
                     if ("1".equals(pathInput)) {
-
+                        System.out.println(g.getAllPaths(nextAdjencyMatrix));
                     } else if ("2".equals(pathInput)) {
 
                     } else if (! "stop".equals(pathInput)) {

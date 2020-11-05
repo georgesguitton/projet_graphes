@@ -72,8 +72,8 @@ public class Graph {
                 matrix[i][j] = Double.POSITIVE_INFINITY;
             }
         }
-        for (Edge de : this.EdgeList) {
-            matrix[de.getInitialNode().getId()][de.getFinalNode().getId()] = de.getValue();
+        for (Edge e : this.EdgeList) {
+            matrix[e.getInitialNode().getId()][e.getFinalNode().getId()] = e.getValue();
         }
         for (int n = 0; n < nodesNumber; n++) {
             if (matrix[n][n] == Double.POSITIVE_INFINITY) {
@@ -90,8 +90,8 @@ public class Graph {
                 matrix[i][j] = 0;
             }
         }
-        for (Edge de : this.EdgeList) {
-            matrix[de.getInitialNode().getId()][de.getFinalNode().getId()] = 1;
+        for (Edge e : this.EdgeList) {
+            matrix[e.getInitialNode().getId()][e.getFinalNode().getId()] = e.getInitialNode().getId();
         }
         return matrix;
     }
@@ -126,7 +126,7 @@ public class Graph {
                 for (int j = 0; j < this.nodesNumber; j++) {
                     if (weightAdjencyMatrix[i][k] + weightAdjencyMatrix[k][j] < weightAdjencyMatrix[i][j]) {
                         weightAdjencyMatrix[i][j] = weightAdjencyMatrix[i][k] + weightAdjencyMatrix[k][j];
-                        nextAdjencyMatrix[i][j] = nextAdjencyMatrix[i][k];
+                        nextAdjencyMatrix[i][j] = nextAdjencyMatrix[k][j];
                     }
                 }
             }
@@ -135,5 +135,31 @@ public class Graph {
         matrixList.add(weightAdjencyMatrix);
         matrixList.add(nextAdjencyMatrix);
         return matrixList;
+    }
+
+    public String getAllPaths(double[][] nextAdjencyMatrix) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < nextAdjencyMatrix.length; i++) {
+            //System.out.println(i);
+            for (int j = 0; j < nextAdjencyMatrix.length; j++) {
+                //System.out.println(j);
+                if (i != j) {
+                    int u = i + 1;
+                    int v = j + 1;
+                    //System.out.println(u + " " + v);
+                    sb.append(u);
+                    do {
+                        if (nextAdjencyMatrix[u - 1][v - 1] == Double.POSITIVE_INFINITY) {
+                            u = (int) (nextAdjencyMatrix[u - 1][v - 1]);
+                            sb.append(" -> ").append(u);
+                        } else {
+                            break;
+                        }
+                    } while (u != v);
+                    sb.append("\n");
+                }
+            }
+        }
+        return sb.toString();
     }
 }
