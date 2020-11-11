@@ -165,16 +165,26 @@ public class Graph {
     public List<int[][]> floydWarshall() {
         int[][] weightAdjencyMatrix = this.getWeightAdjencyMatrix();
         int[][] nextAdjencyMatrix = this.getNextAdjencyMatrix();
+        StringBuilder temporaryResults = new StringBuilder();
         for (int k = 0; k < this.nodesNumber; k++) {
             for (int i = 0; i < this.nodesNumber; i++) {
                 for (int j = 0; j < this.nodesNumber; j++) {
                     if (weightAdjencyMatrix[i][k] + weightAdjencyMatrix[k][j] < weightAdjencyMatrix[i][j]) {
                         weightAdjencyMatrix[i][j] = weightAdjencyMatrix[i][k] + weightAdjencyMatrix[k][j];
                         nextAdjencyMatrix[i][j] = nextAdjencyMatrix[k][j];
+                        temporaryResults.append("---------------------------\n");
+                        temporaryResults.append("Pour k = ").append(k).append(", i = ").append(i).append(", j = ").append(j).append("\n");
+                        temporaryResults.append("---------------------------\n");
+                        temporaryResults.append("Matrice de poids des arcs :\n");
+                        temporaryResults.append(getMatrixString(weightAdjencyMatrix));
+                        temporaryResults.append("---------------------------\n");
+                        temporaryResults.append("Matrice d'adjacence :\n");
+                        temporaryResults.append(getMatrixString(weightAdjencyMatrix));
                     }
                 }
             }
         }
+        System.out.println(temporaryResults.toString());
         List<int[][]> matrixList = new ArrayList<>();
         matrixList.add(weightAdjencyMatrix);
         matrixList.add(nextAdjencyMatrix);
